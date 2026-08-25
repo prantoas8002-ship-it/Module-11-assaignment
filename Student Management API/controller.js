@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-const  mongoose  = require("mongoose");
+const mongoose = require("mongoose");
 const { userModel } = require("./model");
 
 const test = async (req, res) => {
@@ -56,7 +56,7 @@ const loginUser = async (req, res) => {
                 { expiresIn: "7d" }
             )
             res.status(200).json({
-                message: "success!",
+                message: "login successfull!",
                 token: token
             })
         }
