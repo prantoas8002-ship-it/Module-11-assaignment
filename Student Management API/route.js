@@ -10,8 +10,8 @@ router.post('/auth/login', loginUser);
 router.post('/students', authMiddleware, createStudent);
 router.get('/students', authMiddleware, getAllStudents);
 router.get('/students/:id', authMiddleware, getSingleStudents);
-router.put("/api/students/:id", authMiddleware, updateStudent);
-router.delete("/api/students/:id", authMiddleware, deleteStudent);
+router.put("/students/:id", authMiddleware, updateStudent);
+router.delete("/students/:id", authMiddleware, deleteStudent);
 
 
 

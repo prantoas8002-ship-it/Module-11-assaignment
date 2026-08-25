@@ -135,7 +135,7 @@ const updateStudent = async (req, res) => {
         const id = req.params.id;
         const updateData = req.body;
 
-        const result = await Student.findByIdAndUpdate(
+        const result = await studentModel.findByIdAndUpdate(
             id,
             updateData,
             { new: true }
@@ -168,7 +168,7 @@ const deleteStudent = async (req, res) => {
     try {
         const id = req.params.id;
 
-        const result = await Student.findByIdAndDelete(id);
+        const result = await studentModel.findByIdAndDelete(id);
 
         if (!result) {
             return res.status(404).json({
