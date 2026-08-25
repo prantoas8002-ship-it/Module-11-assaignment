@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const mongoose = require("mongoose");
-const { userModel } = require("./model");
+const { userModel, studentModel } = require("./model");
 
 const test = async (req, res) => {
     try {
@@ -35,7 +35,6 @@ const registerUser = async (req, res) => {
         console.log("error", error);
         res.status(500).json({
             "message": "error register",
-            "error": error
         })
     }
 }
@@ -72,4 +71,124 @@ const loginUser = async (req, res) => {
     }
 }
 
-module.exports = { test, registerUser, loginUser };
+// creating students 
+
+const createStudent = async (req, res) => {
+    try {
+        const info = req.body;
+        const result = await studentModel.create(info);
+
+        res.status(200).json({
+            "operation": "success",
+            "information": result
+        })
+    } catch (error) {
+        console.log("error : ", error);
+        res.status(500).json({
+            "operation": "unsuccessfull",
+        })
+    }
+}
+
+// get all students
+
+const getAllStudents = async (req, res) => {
+    try {
+        const result = await studentModel.find();
+
+        res.status(200).json({
+            "operation": "success",
+            "information": result
+        })
+    } catch (error) {
+        console.log("error : ", error);
+        res.status(500).json({
+            "operation": "unsuccessfull",
+        })
+    }
+}
+
+// get single student
+
+const getSingleStudents = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const result = await studentModel.findById(id);
+
+        res.status(200).json({
+            "operation": "success",
+            "information": result
+        })
+    } catch (error) {
+        console.log("error : ", error);
+        res.status(500).json({
+            "operation": "unsuccessfull"
+        })
+    }
+}
+
+
+// update student
+
+const updateStudent = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const updateData = req.body;
+
+        const result = await Student.findByIdAndUpdate(
+            id,
+            updateData,
+            { new: true }
+        );
+
+        if (!result) {
+            return res.status(404).json({
+                success: false,
+                message: "Student not found"
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Student updated successfully",
+            data: result
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
+// delete students
+
+const deleteStudent = async (req, res) => {
+    try {
+        const id = req.params.id;
+
+        const result = await Student.findByIdAndDelete(id);
+
+        if (!result) {
+            return res.status(404).json({
+                success: false,
+                message: "Student not found"
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Student deleted successfully"
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
+
+module.exports = { test, registerUser, loginUser, createStudent, getAllStudents, getSingleStudents, updateStudent, deleteStudent };
