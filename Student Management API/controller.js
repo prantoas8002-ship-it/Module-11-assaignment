@@ -1,5 +1,7 @@
 const bcrypt = require('bcrypt');
-const { default: mongoose } = require("mongoose");
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
+const  mongoose  = require("mongoose");
 const { userModel } = require("./model");
 
 const test = async (req, res) => {
@@ -38,4 +40,36 @@ const registerUser = async (req, res) => {
     }
 }
 
-module.exports = { test, registerUser };
+const loginUser = async (req, res) => {
+    try {
+        const info = req.body;
+        const user = await userModel.findOne({ "email": info.email });
+        if (!user) {
+            return res.status(401).json({ message: "invalid username or password" });
+        }
+        const isMatch = await bcrypt.compare(info.password, user.password);
+
+        if (isMatch) {
+            const token = jwt.sign(
+                { userId: user._id },
+                process.env.JWT_SECRET_KEY,
+                { expiresIn: "7d" }
+            )
+            res.status(200).json({
+                message: "success!",
+                token: token
+            })
+        }
+        else {
+            res.status(401).json({ message: "invalid username or password" });
+        }
+
+    } catch (error) {
+        console.error("login falid : ", error);
+        res.status(500).json({
+            message: "invalid username or password"
+        })
+    }
+}
+
+module.exports = { test, registerUser, loginUser };
